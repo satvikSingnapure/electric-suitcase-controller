@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0E1318">
+  <title>Voyager Suitcase</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <script type="module" src="src/main.js"></script>
+</head>
+<body>
+<div class="app">
+
+  <header class="top">
+    <div>
+      <p class="eyebrow">Your suitcase</p>
+      <h1 data-text="name">Suitcase</h1>
+    </div>
+    <p class="pill"><span class="dot" data-bind-state="view.connState"></span><span data-text="view.connLabel">Connecting…</span></p>
+  </header>
+
+  <main>
+
+    <!-- ============ DRIVE ============ -->
+    <section class="panel" data-panel="drive" aria-label="Drive">
+      <div class="card">
+        <div class="status-row">
+          <span class="dot big" data-bind-state="view.statusState"></span>
+          <div>
+            <p class="status-title" data-text="view.statusTitle">—</p>
+            <p class="muted" data-text="view.statusSub">—</p>
+          </div>
+        </div>
+        <div class="stats">
+          <div class="tile"><span class="muted">Battery</span><strong data-text="view.battery">—</strong></div>
+          <div class="tile"><span class="muted">Range</span><strong data-text="view.range">—</strong></div>
+          <div class="tile"><span class="muted">Load</span><strong data-text="view.load">—</strong></div>
+        </div>
+        <div class="meter" role="img" aria-label="Battery level"><div class="meter-fill" data-width="battery"></div></div>
+      </div>
+
+      <h2 class="label">Mode</h2>
+      <div class="modes" data-dim="locked">
+        <button class="mode" data-cmd="setMode" data-args='{"mode":"manual"}' data-active-path="mode" data-active-value='"manual"'>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 21V9a5 5 0 0 1 10 0v12"/><path d="M7 13h10"/></svg>
+          <span>Manual</span>
+        </button>
+        <button class="mode" data-cmd="setMode" data-args='{"mode":"follow"}' data-active-path="mode" data-active-value='"follow"' data-lockable>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="12" r="3"/><circle cx="5" cy="12" r="2"/><path d="M9 12h5"/><path d="M12 9l3 3-3 3"/></svg>
+          <span>Follow me</span>
+        </button>
+        <button class="mode" data-cmd="setMode" data-args='{"mode":"assist"}' data-active-path="mode" data-active-value='"assist"' data-lockable>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2L5 14h6l-1 8 8-12h-6z"/></svg>
+          <span>Power assist</span>
+        </button>
+      </div>
+
+      <div class="card" data-show="mode==manual">
+        <p class="soft">Manual mode keeps the motor idle, so the case rolls like a regular suitcase. Pick Follow me or Power assist when you want help.</p>
+      </div>
+
+      <div class="card" data-show="mode==follow">
+        <h3>Follow distance</h3>
+        <div class="seg">
+          <button data-cmd="setFollowDistance" data-args='{"meters":1}' data-active-path="followDistance" data-active-value="1"><span>Close</span><small>1 m</small></button>
+          <button data-cmd="setFollowDistance" data-args='{"meters":1.5}' data-active-path="followDistance" data-active-value="1.5"><span>Standard</span><small>1.5 m</small></button>
+          <button data-cmd="setFollowDistance" data-args='{"meters":2.5}' data-active-path="followDistance" data-active-value="2.5"><span>Far</span><small>2.5 m</small></button>
+        </div>
+        <dl class="facts">
+          <div><dt>Distance to you</dt><dd data-text="view.distanceToOwner">—</dd></div>
+          <div><dt>Speed</dt><dd data-text="view.speed">—</dd></div>
+          <div><dt>Tracking range</dt><dd data-text="view.linkText">—</dd></div>
+        </dl>
+        <button class="btn ghost" data-cmd="setMode" data-args='{"mode":"manual"}'>Stop following</button>
+      </div>
+
+      <div class="card" data-show="mode==assist">
+        <h3>Assist strength</h3>
+        <div class="seg">
+          <button data-cmd="setAssistLevel" data-args='{"level":0}' data-active-path="assistLevel" data-active-value="0"><span>Eco</span><small>Gentle</small></button>
+          <button data-cmd="setAssistLevel" data-args='{"level":1}' data-active-path="assistLevel" data-active-value="1"><span>Normal</span><small>Balanced</small></button>
+          <button data-cmd="setAssistLevel" data-args='{"level":2}' data-active-path="assistLevel" data-active-value="2"><span>Boost</span><small>Strong</small></button>
+        </div>
+        <p class="soft" data-text="view.feltLoad">—</p>
+        <div class="row">
+          <div><p class="row-title">Hill hold</p><p class="muted">Stops the case rolling back on a slope</p></div>
+          <button class="switch" role="switch" aria-label="Hill hold" data-toggle-cmd="setHillHold" data-path="hillHold"></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ LOCATE ============ -->
+    <section class="panel" data-panel="locate" aria-label="Locate" hidden>
+      <div class="card flush">
+        <svg id="map" class="map" viewBox="0 0 350 230" role="img" aria-label="Map"></svg>
+        <div class="map-foot">
+          <div>
+            <p class="status-title" data-text="view.gpsDistance">—</p>
+            <p class="muted" data-text="view.gpsAge">—</p>
+          </div>
+          <a class="link" data-href="view.mapsUrl" target="_blank" rel="noopener noreferrer">Open in maps</a>
+        </div>
+      </div>
+
+      <button class="btn big-btn" data-toggle-cmd="ring" data-path="ringing">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9a6 6 0 0 1 12 0c0 6 2 7 2 7H4s2-1 2-7"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>
+        <span data-text="view.ringLabel">Ring suitcase</span>
+      </button>
+
+      <div class="card list">
+        <div class="row">
+          <div><p class="row-title">Lost mode</p><p class="muted">Updates the location more often</p></div>
+          <button class="switch" role="switch" aria-label="Lost mode" data-toggle-cmd="setLostMode" data-path="lostMode"></button>
+        </div>
+        <div class="row">
+          <div><p class="row-title">Left-behind alert</p><p class="muted">Warn me when I walk away from it</p></div>
+          <button class="switch" role="switch" aria-label="Left-behind alert" data-toggle-cmd="setLeaveAlert" data-toggle-arg="enabled" data-path="leaveAlert.enabled"></button>
+        </div>
+        <div class="row stack" data-show="leaveAlert.enabled">
+          <p class="muted">Alert me when the case is farther than</p>
+          <div class="seg">
+            <button data-cmd="setLeaveAlert" data-args='{"distance":10}' data-active-path="leaveAlert.distance" data-active-value="10">10 m</button>
+            <button data-cmd="setLeaveAlert" data-args='{"distance":25}' data-active-path="leaveAlert.distance" data-active-value="25">25 m</button>
+            <button data-cmd="setLeaveAlert" data-args='{"distance":50}' data-active-path="leaveAlert.distance" data-active-value="50">50 m</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CONNECT ============ -->
+    <section class="panel" data-panel="connect" aria-label="Connect" hidden>
+      <div class="card">
+        <div class="row">
+          <div><h3 class="flat">Wi-Fi</h3><p class="muted" data-text="view.wifiSub">—</p></div>
+          <button class="switch" role="switch" aria-label="Wi-Fi" data-toggle-cmd="setWifi" data-toggle-arg="enabled" data-path="wifi.enabled"></button>
+        </div>
+      </div>
+
+      <div data-show="wifi.enabled">
+        <h2 class="label">Networks</h2>
+        <ul class="networks" id="networks"></ul>
+      </div>
+      <div class="card" data-show="!wifi.enabled">
+        <p class="soft">Wi-Fi is off, so live updates away from the suitcase are paused.</p>
+      </div>
+
+      <div class="card list">
+        <div class="row">
+          <div><p class="row-title">Remote control</p><p class="muted">Use the app when you are not next to the suitcase</p></div>
+          <button class="switch" role="switch" aria-label="Remote control" data-toggle-cmd="setRemoteControl" data-path="remoteControl"></button>
+        </div>
+        <dl class="facts tight">
+          <div><dt>Remote status</dt><dd data-text="view.remoteText">—</dd></div>
+          <div><dt>Firmware</dt><dd data-text="firmware">—</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- ============ SETTINGS ============ -->
+    <section class="panel" data-panel="settings" aria-label="Settings" hidden>
+      <div class="card">
+        <h3>Top speed</h3>
+        <p class="muted">Applies to Follow me and Power assist (km/h)</p>
+        <div class="seg four">
+          <button data-cmd="setSpeedLimit" data-args='{"kmh":3}' data-active-path="speedLimitKmh" data-active-value="3">3</button>
+          <button data-cmd="setSpeedLimit" data-args='{"kmh":4}' data-active-path="speedLimitKmh" data-active-value="4">4</button>
+          <button data-cmd="setSpeedLimit" data-args='{"kmh":5}' data-active-path="speedLimitKmh" data-active-value="5">5</button>
+          <button data-cmd="setSpeedLimit" data-args='{"kmh":6}' data-active-path="speedLimitKmh" data-active-value="6">6</button>
+        </div>
+      </div>
+
+      <div class="card list">
+        <div class="row">
+          <div><p class="row-title">Lock motor if tipped</p><p class="muted">Brakes the wheels if the case falls over</p></div>
+          <button class="switch" role="switch" aria-label="Lock motor if tipped" data-toggle-cmd="setSetting" data-toggle-extra='{"key":"tipLock"}' data-path="settings.tipLock"></button>
+        </div>
+        <div class="row">
+          <div><p class="row-title">Stair detection</p><p class="muted">Pauses the motor before a step or drop</p></div>
+          <button class="switch" role="switch" aria-label="Stair detection" data-toggle-cmd="setSetting" data-toggle-extra='{"key":"stairDetect"}' data-path="settings.stairDetect"></button>
+        </div>
+        <div class="row">
+          <div><p class="row-title">Alert sounds</p><p class="muted">Beeps when it locks or loses you</p></div>
+          <button class="switch" role="switch" aria-label="Alert sounds" data-toggle-cmd="setSetting" data-toggle-extra='{"key":"sounds"}' data-path="settings.sounds"></button>
+        </div>
+        <div class="row">
+          <div><p class="row-title">Auto sleep</p><p class="muted">Powers down after 30 minutes idle</p></div>
+          <button class="switch" role="switch" aria-label="Auto sleep" data-toggle-cmd="setSetting" data-toggle-extra='{"key":"autoSleep"}' data-path="settings.autoSleep"></button>
+        </div>
+      </div>
+
+      <div data-show="simulated">
+        <h2 class="label">Simulator</h2>
+        <div class="card">
+          <p class="muted">Pretend things happen to the suitcase or its owner. These controls only exist while running the simulator.</p>
+          <div class="sim">
+            <button class="btn ghost" data-toggle-cmd="simWalk" data-path="ownerWalking">Owner walks a loop</button>
+            <button class="btn ghost" data-cmd="simOwnerAway" data-args='{"meters":60}'>Owner 60 m away</button>
+            <button class="btn ghost" data-cmd="simOwnerNear">Owner back beside it</button>
+            <button class="btn ghost" data-toggle-cmd="simTip" data-path="tipped">Tip the case over</button>
+            <button class="btn ghost" data-toggle-cmd="simStairs" data-path="stairsAhead">Stairs ahead</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Emergency lock: one tap from every tab -->
+  <div class="lockbar">
+    <button class="lock-btn" data-cmd="lockMotor" data-always data-show="!locked">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+      <span><strong>Lock motor</strong><small>Emergency stop. Brakes the wheels now.</small></span>
+    </button>
+    <div class="locked-bar" data-show="locked" role="status">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+      <span><strong>Motor locked</strong><small>Wheels are braked. Motor modes are off.</small></span>
+      <button class="btn dark" data-cmd="releaseLock" data-always>Release</button>
+    </div>
+  </div>
+
+  <nav class="tabs" aria-label="Sections">
+    <a href="#drive" data-tab="drive">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="8" width="12" height="12" rx="2"/><path d="M9 8V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/></svg>
+      <span>Drive</span>
+    </a>
+    <a href="#locate" data-tab="locate">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 0 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+      <span>Locate</span>
+    </a>
+    <a href="#connect" data-tab="connect">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 9a15 15 0 0 1 20 0"/><path d="M5.5 12.5a10 10 0 0 1 13 0"/><path d="M9 16a5 5 0 0 1 6 0"/><circle cx="12" cy="19.5" r="0.8"/></svg>
+      <span>Connect</span>
+    </a>
+    <a href="#settings" data-tab="settings">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10"/><path d="M18 7h2"/><circle cx="16" cy="7" r="2"/><path d="M4 17h2"/><path d="M10 17h10"/><circle cx="8" cy="17" r="2"/></svg>
+      <span>Settings</span>
+    </a>
+  </nav>
+
+  <div id="toasts" class="toasts" aria-live="polite"></div>
+
+  <dialog id="wifi-dialog" aria-labelledby="wifi-dialog-title">
+    <form id="wifi-form" method="dialog">
+      <h2 id="wifi-dialog-title">Join <span id="wifi-ssid"></span></h2>
+      <label for="wifi-password">Password</label>
+      <input id="wifi-password" type="password" autocomplete="off" maxlength="63" required>
+      <p id="wifi-error" class="form-error" role="alert" hidden></p>
+      <div class="dialog-actions">
+        <button type="button" class="btn ghost" id="wifi-cancel">Cancel</button>
+        <button type="submit" class="btn primary">Join</button>
+      </div>
+    </form>
+  </dialog>
+
+</div>
+</body>
+</html>

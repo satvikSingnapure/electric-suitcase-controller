@@ -1,0 +1,10 @@
+{
+  "name": "Voyager Suitcase",
+  "short_name": "Voyager",
+  "description": "Control your electric suitcase: follow mode, emergency motor lock, GPS tracking, Wi-Fi and power assist.",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#0E1318",
+  "theme_color": "#0E1318",
+  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}
